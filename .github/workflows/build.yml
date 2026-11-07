@@ -1,9 +1,10 @@
-name: IPA oluştur
+name: QR Öde IPA
 
 on:
   workflow_dispatch:
   push:
     branches: [main]
+    paths-ignore: ['SimitKulesi/**', '.github/workflows/simit.yml']
 
 jobs:
   build:
