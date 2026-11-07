@@ -1,0 +1,51 @@
+name: QRPay
+options:
+  bundleIdPrefix: com.tiyzi
+  deploymentTarget:
+    iOS: "18.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.10"
+    DEVELOPMENT_TEAM: "" # Apple Developer Team ID'nizi buraya yazın
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+targets:
+  QRPay:
+    type: application
+    platform: iOS
+    sources:
+      - QRPay
+      - Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tiyzi.qrpay
+        TARGETED_DEVICE_FAMILY: "1"
+    info:
+      path: QRPay/Info.plist
+      properties:
+        CFBundleDisplayName: QR Öde
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        NSCameraUsageDescription: Karekodu okutmak için kameraya erişim gerekiyor.
+        NSFaceIDUsageDescription: Ödemeyi onaylamak için Face ID kullanılır.
+        CFBundleURLTypes:
+          - CFBundleURLName: com.tiyzi.qrpay
+            CFBundleURLSchemes: [qrpay]
+    dependencies:
+      - target: QRPayControls
+  QRPayControls:
+    type: app-extension
+    platform: iOS
+    sources:
+      - QRPayControls
+      - Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tiyzi.qrpay.controls
+        TARGETED_DEVICE_FAMILY: "1"
+    info:
+      path: QRPayControls/Info.plist
+      properties:
+        CFBundleDisplayName: QR Öde
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension

@@ -1,0 +1,36 @@
+name: IPA oluştur
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: XcodeGen kur ve projeyi oluştur
+        run: |
+          brew install xcodegen
+          xcodegen
+
+      - name: İmzasız derle
+        run: |
+          xcodebuild -project QRPay.xcodeproj -target QRPay \
+            -configuration Release -sdk iphoneos \
+            SYMROOT="$PWD/build" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            build
+
+      - name: IPA paketle
+        run: |
+          mkdir Payload
+          cp -R build/Release-iphoneos/QRPay.app Payload/
+          zip -qr QRPay.ipa Payload
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: QRPay-ipa
+          path: QRPay.ipa
