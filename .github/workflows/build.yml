@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths-ignore: ['SimitKulesi/**', '.github/workflows/simit.yml']
+    paths-ignore: ['SimitKulesi/**', 'AltinVurus/**', '.github/workflows/simit.yml', '.github/workflows/altin.yml']
 
 jobs:
   build:
