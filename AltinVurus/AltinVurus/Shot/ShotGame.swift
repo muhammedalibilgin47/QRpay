@@ -229,10 +229,16 @@ final class ShotGame {
         let speedPx = hypot(Double(last.point.x - r0.point.x), Double(last.point.y - r0.point.y)) / dt
         let power = min(1, max(0, (speedPx - 500) / 2500))
 
-        let gain: CGFloat = 1.35
-        let aim = CGPoint(x: ballScreen.x + (last.point.x - first.point.x) * gain,
-                          y: ballScreen.y - CGFloat(dy) * gain)
-        guard var target = goalPlanePoint(aim) else { return }
+        // Yön: kaydırma çizgisinin kale hizasına uzantısı.
+        // Yükseklik: kaydırmanın top–kale mesafesine oranı (her mesafede aynı his).
+        guard let goalBase = project(Vec3(x: 0, y: 0, z: 0)),
+              let goalTop = project(Vec3(x: 0, y: Self.goalHeight, z: 0)) else { return }
+        let reach = max(60, Double(ballScreen.y - goalBase.y))
+        let ratio = dy / reach
+        let midY = (goalBase.y + goalTop.y) / 2
+        let lateral = Double(last.point.x - first.point.x) / dy * Double(ballScreen.y - midY)
+        guard var target = goalPlanePoint(CGPoint(x: ballScreen.x + CGFloat(lateral), y: midY)) else { return }
+        target.y = (ratio - 0.55) * 4.2
 
         let sigma = 0.12 + (1 - config.shooterSkill) * 0.3 + power * 0.3
         target.x += gaussian() * sigma
